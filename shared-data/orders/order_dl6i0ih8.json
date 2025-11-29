@@ -1,0 +1,21 @@
+{
+  "id": "dl6i0ih8",
+  "status": "CONFIRMED",
+  "buyer": {
+    "name": "Voice Customer"
+  },
+  "line_items": [
+    {
+      "product_id": "tshirt-002",
+      "product_name": "AI Developer Tee",
+      "quantity": 1,
+      "unit_amount": 699,
+      "currency": "INR",
+      "total": 699
+    }
+  ],
+  "total": 699,
+  "currency": "INR",
+  "created_at": "2025-11-29T20:25:58.823Z",
+  "updated_at": "2025-11-29T20:25:58.823Z"
+}

@@ -1,226 +1,248 @@
-# 🎮 Voice Game Master - AI-Powered D&D Adventure
+# Day 9: E-commerce Voice Shopping Agent 🛍️
 
-An immersive voice-powered Dungeons & Dragons game featuring real-time AI responses, natural conversation flow, and a stunning cyberpunk UI. Built with LiveKit Agents and Murf.ai's ultra-fast voice synthesis.
+A fully functional voice-powered shopping assistant built with LiveKit Agents, Next.js, and Murf TTS.
 
-![Cyberpunk UI](https://img.shields.io/badge/UI-Cyberpunk-00ffff?style=for-the-badge)
-![Voice AI](https://img.shields.io/badge/Voice-AI%20Powered-purple?style=for-the-badge)
-![Real-time](https://img.shields.io/badge/Real--time-Interaction-ff00ff?style=for-the-badge)
+## 🌟 Features
 
-## ✨ Features
+### Voice Shopping Assistant
+- **Natural Conversations**: Friendly AI assistant (Alex) helps customers browse and buy products
+- **Product Discovery**: Ask about products and get detailed descriptions with features and pricing
+- **Smart Cart Management**: Add items via voice commands with real-time cart updates
+- **Voice Checkout**: Complete purchases through natural conversation
 
-### 🎭 Immersive Gameplay
-- **Real-time Voice Interaction** - Natural conversation with AI Game Master
-- **Dynamic Storytelling** - Your choices shape the adventure
-- **Dice Rolling System** - Automated D20 rolls with modifiers
-- **Character Progression** - Track HP, stats, inventory, and quests
-- **Epic Narrative** - Cinematic descriptions and dramatic encounters
+### Real-time Shopping Cart
+- **Live Updates**: Cart syncs automatically between voice and UI
+- **File-based Persistence**: Cart state persists across sessions
+- **Visual Feedback**: Cyberpunk-themed UI with smooth animations
+- **Item Management**: Add, remove, and view cart items easily
 
-### 🎨 Cyberpunk UI
-- **Dark Theme** with neon cyan/purple accents
-- **Animated Background** with glowing orbs and particles
-- **Real-time Character Sheet** with live stat updates
-- **Audio Visualizer** for agent voice feedback
-- **Responsive Design** for all screen sizes
+### Order Management
+- **Order Creation**: Generates unique order IDs for each purchase
+- **Order History**: All orders saved as JSON files
+- **Order Details**: Complete order information with line items and totals
+- **Success Animation**: Beautiful checkout confirmation with order summary
 
-### 🤖 AI-Powered Features
-- **Natural Language Processing** - Understands complex player commands
-- **Context-Aware Responses** - Remembers game state and history
-- **Dynamic Quest System** - Generates and tracks objectives
-- **Intelligent Combat** - Tactical encounters with dice mechanics
-- **Inventory Management** - Track items and equipment
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 15, React, TypeScript, Tailwind CSS, Framer Motion
+- **Backend**: Python, LiveKit Agents SDK
+- **Voice**: Deepgram STT, Google Gemini 2.0 Flash, Murf TTS
+- **Real-time**: LiveKit WebRTC
+- **Data**: File-based JSON storage
+
+## 📦 Product Catalog
+
+### Mugs
+- Cyberpunk Coffee Mug (₹899)
+- Hacker's Energy Mug (₹1299)
+
+### T-Shirts (S, M, L, XL)
+- Neural Network T-Shirt (₹799)
+- AI Developer Tee (₹699)
+
+### Hoodies (M, L, XL)
+- Cyberpunk Hoodie (₹1999)
+- Code Warrior Hoodie (₹2299)
+
+### Accessories
+- Tech Geek Cap (₹499)
+- Developer Backpack (₹2499)
+- RGB Gaming Mouse (₹1499)
+- Mechanical Keyboard (₹3999)
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+ and pnpm
-- Python 3.11+
-- LiveKit account (free tier available)
-- Murf.ai API key
+- Python 3.10+
+- Node.js 18+
+- pnpm
+- LiveKit Cloud account (or local server)
+- API Keys: Deepgram, Google AI, Murf
 
-### Installation
+### Setup
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/GhanshyamJha05/Eighth_task_murf_ai.git
-cd Eighth_task_murf_ai/ten-days-of-voice-agents-2025
+git clone https://github.com/GhanshyamJha05/Ninth_Task_murf_ai.git
+cd Ninth_Task_murf_ai
 ```
 
-2. **Set up the backend**
+2. **Backend Setup**
 ```bash
 cd backend
 python -m venv .venv
 .venv\Scripts\activate  # Windows
-# or
 source .venv/bin/activate  # Mac/Linux
-
 pip install -r requirements.txt
+cp .env.example .env.local
+# Add your API keys to .env.local
 ```
 
-3. **Configure environment variables**
-
-Create `backend/.env.local`:
-```env
-LIVEKIT_URL=wss://your-livekit-url
-LIVEKIT_API_KEY=your-api-key
-LIVEKIT_API_SECRET=your-api-secret
-MURF_API_KEY=your-murf-api-key
-OPENAI_API_KEY=your-openai-key
-```
-
-Create `frontend/.env.local`:
-```env
-LIVEKIT_API_KEY=your-api-key
-LIVEKIT_API_SECRET=your-api-secret
-LIVEKIT_URL=https://your-livekit-url
-```
-
-4. **Install frontend dependencies**
+3. **Frontend Setup**
 ```bash
-cd ../frontend
+cd frontend
 pnpm install
+cp .env.example .env.local
+# Add your LiveKit credentials to .env.local
 ```
 
-### Running the Application
-
-**Terminal 1 - LiveKit Server:**
+4. **Start LiveKit Server** (in project root)
 ```bash
-cd ten-days-of-voice-agents-2025
-.\livekit-server.exe --dev
+.\livekit-server.exe --dev  # Windows
+./livekit-server --dev      # Mac/Linux
 ```
 
-**Terminal 2 - Backend Agent:**
+5. **Start Backend Agent**
 ```bash
 cd backend
-.venv\Scripts\activate
-python src/agent.py dev
+.venv\Scripts\python.exe src/agent.py dev
 ```
 
-**Terminal 3 - Frontend:**
+6. **Start Frontend**
 ```bash
 cd frontend
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+7. **Open Browser**
+Navigate to `http://localhost:3001`
 
-## 🎮 How to Play
+## 💬 Voice Commands
 
-1. **Start the Adventure** - Click "START CALL" on the welcome screen
-2. **Speak Naturally** - Describe what you want to do
-3. **Make Choices** - Your decisions affect the story
-4. **Roll Dice** - Say "roll for [skill]" to make checks
-5. **Track Progress** - Monitor your character sheet on the right
+### Browsing Products
+- "What products do you have?"
+- "Tell me about the gaming mouse"
+- "Show me hoodies"
+- "What's the price of the keyboard?"
 
-### Example Commands
-- "I look around for enemies"
-- "I want to sneak past the guards"
-- "Roll for perception"
-- "Check my inventory"
-- "I attack with my sword"
-- "I cast fireball"
+### Adding to Cart
+- "I want a mouse"
+- "Add the keyboard to my cart"
+- "I'll take the hoodie in size large"
 
-## 🏗️ Architecture
+### Cart Management
+- "What's in my cart?"
+- "Show me my cart"
+- "Remove the mouse"
 
-### Tech Stack
-- **Frontend**: Next.js 15, React, TypeScript, Tailwind CSS, Framer Motion
-- **Backend**: Python, LiveKit Agents, OpenAI GPT-4
-- **Voice**: Murf.ai Falcon (ultra-fast TTS)
-- **Real-time**: LiveKit WebRTC
+### Checkout
+- "I'm ready to checkout"
+- "Complete my order"
+- "Checkout please"
 
-### Project Structure
+## 🎨 UI Features
+
+### Product Catalog (Left Panel)
+- Browse all available products
+- View prices, descriptions, and stock
+- Click "ADD TO CART" buttons
+- Visual feedback with checkmarks
+
+### Shopping Cart (Right Panel)
+- Real-time cart updates
+- Item quantities and totals
+- Remove items with trash icon
+- Checkout button with success animation
+
+### Success Animation
+- Green checkmark animation
+- Order summary with all items
+- Total price display
+- Auto-dismisses after 5 seconds
+
+## 📁 Project Structure
+
 ```
-ten-days-of-voice-agents-2025/
 ├── backend/
 │   ├── src/
-│   │   ├── agent.py          # Main game logic
-│   │   └── murf_tts.py       # Murf.ai integration
-│   └── .env.local
+│   │   ├── agent.py          # Main voice agent
+│   │   ├── commerce.py       # E-commerce logic
+│   │   └── murf_tts.py       # Murf TTS integration
+│   └── .env.local            # Backend config
 ├── frontend/
+│   ├── app/
+│   │   └── api/
+│   │       ├── cart/         # Cart API endpoints
+│   │       ├── checkout/     # Checkout endpoint
+│   │       └── products/     # Products endpoint
 │   ├── components/
 │   │   └── app/
-│   │       ├── welcome-view.tsx
-│   │       ├── session-view.tsx
-│   │       └── character-sheet.tsx
-│   └── .env.local
+│   │       ├── product-catalog.tsx
+│   │       ├── shop-cart.tsx
+│   │       └── session-view.tsx
+│   └── .env.local            # Frontend config
 ├── shared-data/
-│   └── game_state.json       # Character & world state
-└── livekit-server.exe
+│   ├── catalog.json          # Product catalog
+│   ├── cart.json             # Current cart state
+│   └── orders/               # Order history
+└── livekit-server.exe        # LiveKit server
 ```
-
-## 🎨 UI Customization
-
-The cyberpunk theme uses:
-- **Primary**: Cyan (#00ffff)
-- **Secondary**: Purple (#a855f7)
-- **Accent**: Pink (#ec4899)
-- **Background**: Black (#000000)
-
-Modify `frontend/styles/globals.css` to customize colors and effects.
 
 ## 🔧 Configuration
 
-### Game State
-Edit `shared-data/game_state.json` to customize:
-- Character stats and inventory
-- Starting location
-- Active quests
-- NPCs and world state
+### Backend (.env.local)
+```env
+LIVEKIT_URL=ws://localhost:7880
+LIVEKIT_API_KEY=your_key
+LIVEKIT_API_SECRET=your_secret
+DEEPGRAM_API_KEY=your_key
+GOOGLE_API_KEY=your_key
+MURF_API_KEY=your_key
+```
 
-### Agent Behavior
-Modify `backend/src/agent.py` to adjust:
-- Game Master personality
-- Dice rolling mechanics
-- Quest generation
-- Combat system
+### Frontend (.env.local)
+```env
+NEXT_PUBLIC_LIVEKIT_URL=ws://localhost:7880
+LIVEKIT_API_KEY=your_key
+LIVEKIT_API_SECRET=your_secret
+```
 
-## 📝 API Keys Setup
+## 🎯 Key Features Implemented
 
-### LiveKit
-1. Sign up at [livekit.io](https://livekit.io)
-2. Create a project
-3. Copy API key and secret
+✅ Voice-powered product browsing  
+✅ Natural language cart management  
+✅ Real-time cart synchronization  
+✅ File-based cart persistence  
+✅ Order creation and storage  
+✅ Checkout success animation  
+✅ Friendly AI personality  
+✅ Cyberpunk-themed UI  
+✅ Responsive design  
+✅ Error handling  
 
-### Murf.ai
-1. Sign up at [murf.ai](https://murf.ai)
-2. Get API key from dashboard
-3. Use Falcon model for fastest response
+## 🐛 Troubleshooting
 
-### OpenAI
-1. Get API key from [platform.openai.com](https://platform.openai.com)
-2. Use GPT-4 for best results
+### Cart not updating
+- Wait 2 seconds for polling to refresh
+- Check `shared-data/cart.json` exists
+- Verify frontend is on port 3001
 
-## 🎯 Features Roadmap
+### Voice agent not responding
+- Check backend logs for errors
+- Verify all API keys are set
+- Ensure LiveKit server is running
 
-- [ ] Multiplayer support
-- [ ] Save/load game states
-- [ ] Custom character creation
-- [ ] More character classes
-- [ ] Expanded quest system
-- [ ] Combat animations
-- [ ] Sound effects
-- [ ] Mobile app
+### Checkout not working
+- Ensure cart has items
+- Check `shared-data/orders/` directory exists
+- Verify file permissions
 
-## 🤝 Contributing
+## 📝 License
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+MIT License - See LICENSE file for details
 
-## 📄 License
+## 👨‍💻 Author
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+Ghanshyam Jha
+- GitHub: [@GhanshyamJha05](https://github.com/GhanshyamJha05)
 
 ## 🙏 Acknowledgments
 
-- Built for the [Murf.ai Voice Agents Challenge](https://murf.ai)
-- Powered by [LiveKit](https://livekit.io)
-- Voice synthesis by [Murf.ai](https://murf.ai)
-- AI by [OpenAI](https://openai.com)
-
-## 📧 Contact
-
-**Ghanshyam Jha**
-- GitHub: [@GhanshyamJha05](https://github.com/GhanshyamJha05)
-- LinkedIn: [Connect with me](https://linkedin.com/in/ghanshyam-jha)
+- LiveKit for the amazing real-time infrastructure
+- Murf AI for ultra-fast TTS
+- Google Gemini for intelligent conversations
+- Deepgram for accurate speech recognition
 
 ---
 
-⭐ Star this repo if you found it helpful!
+**Built for the 10 Days of Voice Agents Challenge - Day 9** 🎉

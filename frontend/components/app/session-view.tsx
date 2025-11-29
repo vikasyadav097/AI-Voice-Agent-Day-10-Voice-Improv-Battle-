@@ -6,8 +6,8 @@ import type { AppConfig } from '@/app-config';
 import { ChatTranscript } from '@/components/app/chat-transcript';
 import { PreConnectMessage } from '@/components/app/preconnect-message';
 import { TileLayout } from '@/components/app/tile-layout';
-import { WellnessDisplay } from '@/components/app/wellness-display';
-import { CharacterSheet } from '@/components/app/character-sheet';
+import { ProductCatalog } from '@/components/app/product-catalog';
+import { ShopCart } from '@/components/app/shop-cart';
 import {
   AgentControlBar,
   type ControlBarControls,
@@ -185,14 +185,14 @@ export const SessionView = ({
       {/* Tile Layout */}
       <TileLayout chatOpen={chatOpen} />
 
-      {/* Wellness Check-in Display */}
-      <div className="fixed top-24 right-4 z-40 max-w-xs">
-        <WellnessDisplay className="max-h-[60vh] overflow-y-auto" />
+      {/* Product Catalog - Left Side */}
+      <div className="fixed top-24 left-4 z-40">
+        <ProductCatalog />
       </div>
 
-      {/* Character Sheet Display */}
-      <div className="fixed top-24 right-4 z-40 w-80">
-        <CharacterSheet messages={messages} />
+      {/* Shopping Cart - Right Side */}
+      <div className="fixed top-24 right-4 z-40">
+        <ShopCart />
       </div>
 
       {/* Bottom */}

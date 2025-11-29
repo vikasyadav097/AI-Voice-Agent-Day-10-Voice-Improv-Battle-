@@ -1,9 +1,8 @@
 import logging
 import json
-import random
 from datetime import datetime
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Annotated
 
 from dotenv import load_dotenv
 from livekit.agents import (
@@ -23,298 +22,268 @@ from livekit.agents import (
 from livekit.plugins import silero, google, deepgram, noise_cancellation
 from livekit.plugins.turn_detector.multilingual import MultilingualModel
 import murf_tts
+import commerce
 
-logger = logging.getLogger("game_master")
+logger = logging.getLogger("shop_agent")
 
 load_dotenv(".env.local")
 
-# Load game state
-GAME_STATE_FILE = Path("../shared-data/game_state.json")
-game_state = {}
-if GAME_STATE_FILE.exists():
-    with open(GAME_STATE_FILE, "r", encoding="utf-8") as f:
-        game_state = json.load(f)
-        logger.info(f"Loaded game state for {game_state.get('player', {}).get('name', 'Adventurer')}")
-else:
-    logger.warning(f"Game state file not found: {GAME_STATE_FILE}")
+# Session ID for cart management
+SESSION_ID = "default_session"
 
 
-def save_game_state():
-    """Save the current game state to JSON"""
-    with open(GAME_STATE_FILE, "w") as f:
-        json.dump(game_state, f, indent=2)
-    logger.info("Game state saved")
-
-
-def roll_dice(sides=20, modifier=0):
-    """Roll a dice with optional modifier"""
-    roll = random.randint(1, sides)
-    total = roll + modifier
-    logger.info(f"Dice roll: d{sides} = {roll} + {modifier} = {total}")
-    return roll, total
-
-
-def get_stat_modifier(stat_value):
-    """Convert stat value to D&D-style modifier"""
-    return (stat_value - 10) // 2
-
-
-class GameMasterAgent(Agent):
+class ShopAgent(Agent):
     def __init__(self) -> None:
-        player_name = game_state.get("player", {}).get("name", "Adventurer")
-        player_class = game_state.get("player", {}).get("class", "Warrior")
-        location = game_state.get("current_location", {}).get("name", "Unknown")
-        
         super().__init__(
-            instructions=f"""You are an epic Game Master running a fantasy D&D-style adventure!
+            instructions="""You are Alex, a warm and friendly tech store assistant who genuinely loves helping customers find amazing products!
 
-SETTING: High Fantasy World
-You are guiding {player_name}, a brave {player_class}, through an immersive adventure filled with danger, mystery, and glory!
+🛍️ YOUR PRODUCT CATALOG:
+1. MUGS:
+   - mug-001: Cyberpunk Coffee Mug (₹899) - LED-lit ceramic mug, perfect for late-night coding
+   - mug-002: Hacker's Energy Mug (₹1299) - Extra large 500ml capacity, keeps drinks hot for hours
 
-CURRENT SITUATION:
-- Player: {player_name} the {player_class}
-- Location: {location}
-- Your role: Describe vivid scenes, create tension, and guide the story
+2. T-SHIRTS (Sizes: S, M, L, XL):
+   - tshirt-001: Neural Network T-Shirt (₹799) - 100% cotton, circuit board design, breathable fabric
+   - tshirt-002: AI Developer Tee (₹699) - Soft premium cotton, "Powered by AI" print
 
-YOUR GM STYLE:
-1. IMMERSIVE STORYTELLING
-   - Paint vivid scenes with sensory details
-   - Create atmosphere and tension
-   - Use dramatic pauses and emphasis
-   - Make NPCs memorable with distinct personalities
+3. HOODIES (Sizes: M, L, XL):
+   - hoodie-001: Cyberpunk Hoodie (₹1999) - Premium fleece, neon accents, kangaroo pocket
+   - hoodie-002: Code Warrior Hoodie (₹2299) - Extra warm, perfect for cold offices
 
-2. PLAYER AGENCY
-   - Always end with "What do you do?" or similar prompt
-   - Present 2-3 clear options when helpful
-   - Let player make meaningful choices
-   - React dynamically to unexpected actions
+4. ACCESSORIES:
+   - cap-001: Tech Geek Cap (₹499) - Adjustable snapback, embroidered logo
+   - bag-001: Developer Backpack (₹2499) - Padded laptop compartment, USB charging port, water-resistant
+   - mouse-001: RGB Gaming Mouse (₹1499) - 16000 DPI, ergonomic grip, customizable RGB, 7 programmable buttons
+   - keyboard-001: Mechanical Keyboard (₹3999) - Cherry MX Blue switches, RGB per-key lighting, aluminum frame, N-key rollover
 
-3. PACING
-   - Keep descriptions concise but evocative (2-3 sentences)
-   - Balance action, exploration, and roleplay
-   - Build tension gradually
-   - Reward creativity and bold choices
+🎯 YOUR MISSION:
+Help customers discover products, answer questions, and add items to their cart!
 
-4. MECHANICS
-   - Use the tools to track stats, inventory, and events
-   - Call for dice rolls during risky actions
-   - Apply stat modifiers to outcomes
-   - Update game state after important events
+💡 YOUR FRIENDLY APPROACH:
+1. When customer mentions a product → Call get_product_details() to share info
+2. When customer says "yes/sure/sounds good" → Call add_to_cart() to help them
+3. For clothing → Kindly ask "What size would you like?" (S, M, L, or XL)
+4. Share features naturally - help them make great choices!
+5. Keep responses warm, conversational, and under 30 words
 
-5. TONE
-   - Epic and dramatic, but not overly serious
-   - Celebrate player victories
-   - Make failures interesting, not punishing
-   - Keep it fun and engaging!
+🌟 CONVERSATION EXAMPLES:
 
-IMPORTANT RULES:
-- ALWAYS use tools to check/update game state
-- Roll dice for combat, skill checks, and risky actions
-- Track HP, inventory, and quest progress
-- Remember past events and NPC interactions
-- Keep responses under 50 words unless describing a major scene
-- End EVERY response with a question or prompt for action
+Customer: "I want a gaming mouse"
+You: *Call get_product_details("mouse-001")* "I'd love to help! Our RGB Gaming Mouse is ₹1499. It has 16000 DPI, ergonomic grip, and beautiful RGB lighting. Would you like it?"
 
-EXAMPLE OPENING:
-"Thunder crashes as you stand before the Crimson Citadel. Its blood-red towers pierce storm clouds crackling with dark magic. You grip your Shadowfang Blade. Lord Malachar awaits within. This ends tonight. What do you do?"
+Customer: "Tell me more about features"
+You: "Of course! It has 7 programmable buttons - great for gaming and work. The ergonomic design is really comfortable. Shall I add it for you?"
 
-MAKE IT EPIC:
-- Use vivid, cinematic descriptions
-- Create tension and urgency
-- Make every choice feel important
-- Reward bold actions
-- Punish recklessness but keep it fun
-- Use emojis for dramatic effect (⚔️💀🔥⚡)
+Customer: "Yes" or "Sure" or "Sounds good"
+You: *Call add_to_cart("mouse-001", 1)* "Wonderful! I've added the RGB Gaming Mouse to your cart for ₹1499. Can I help you find anything else?"
 
-Remember: You're creating a LEGENDARY adventure! Make every moment count!""",
+Customer: "I need a hoodie"
+You: *Call get_product_details("hoodie-001")* "Great choice! The Cyberpunk Hoodie is ₹1999. It's super cozy with premium fleece and cool neon accents. What size would work best for you - M, L, or XL?"
+
+Customer: "Large"
+You: *Call add_to_cart("hoodie-001", 1, "L")* "Perfect! I've added the Cyberpunk Hoodie in size L for ₹1999. Would you like to browse more items?"
+
+💝 YOUR PERSONALITY:
+- Always warm, patient, and genuinely helpful
+- Use phrases like "I'd love to help", "Great choice!", "Wonderful!"
+- Never pushy - guide and suggest gently
+- Celebrate their choices: "That's a fantastic pick!"
+- End with friendly questions: "What else can I help you find?"
+
+Remember: You're here to make shopping delightful and easy. Be their friendly guide!""",
         )
     
     @function_tool
-    async def get_player_stats(self, context: RunContext):
-        """Get the player's current stats, HP, and inventory.
-        
-        Returns player character information.
-        """
-        player = game_state.get("player", {})
-        stats = player.get("stats", {})
-        inventory = player.get("inventory", [])
-        
-        info = f"""Player: {player.get('name')} the {player.get('class')}
-Level {player.get('level')} | HP: {player.get('hp')}/{player.get('max_hp')}
-STR: {stats.get('strength')} | INT: {stats.get('intelligence')} | DEX: {stats.get('dexterity')}
-Inventory: {', '.join(inventory)}
-Gold: {player.get('gold')} coins"""
-        
-        logger.info(f"Player stats retrieved: {player.get('name')}")
-        return info
-    
-    @function_tool
-    async def roll_check(
+    async def get_products(
         self,
         context: RunContext,
-        check_type: Annotated[str, "Type of check: strength, intelligence, dexterity, charisma, or luck"],
-        difficulty: Annotated[int, "Difficulty (5=easy, 10=medium, 15=hard, 20=very hard)"] = 10
+        category: Annotated[str, "Product category: mug, tshirt, hoodie, cap, bag, accessory, or leave empty for all"] = None
     ):
-        """Roll a skill check with player's stat modifier.
+        """Get list of available products, optionally filtered by category.
         
         Args:
-            check_type: Which stat to use
-            difficulty: Target number to beat
+            category: Filter by category or None for everything
         """
-        stats = game_state.get("player", {}).get("stats", {})
-        stat_value = stats.get(check_type.lower(), 10)
-        modifier = get_stat_modifier(stat_value)
+        products = commerce.list_products(category=category)
         
-        roll, total = roll_dice(20, modifier)
-        success = total >= difficulty
+        if not products:
+            return f"No products found in category: {category}"
         
-        result = f"🎲 {check_type.upper()} Check: Rolled {roll} + {modifier} = {total}"
-        if success:
-            result += f" ✅ SUCCESS! (needed {difficulty})"
-        else:
-            result += f" ❌ FAILED (needed {difficulty})"
+        result = f"Available products:\n"
+        for p in products[:5]:  # Limit to 5 for voice
+            result += f"- {p['name']}: ₹{p['price']}"
+            if p.get('size'):
+                result += f" (Sizes: {', '.join(p['size'])})"
+            result += "\n"
         
-        logger.info(f"Check: {check_type} vs DC{difficulty} = {total} ({'success' if success else 'fail'})")
+        logger.info(f"Listed {len(products)} products in {category or 'all'}")
+        return result.strip()
+    
+    @function_tool
+    async def get_product_details(
+        self,
+        context: RunContext,
+        product_id: Annotated[str, "REQUIRED: Product ID like 'mouse-001', 'hoodie-001', 'keyboard-001', 'mug-001', 'tshirt-001', 'cap-001', 'bag-001'"]
+    ):
+        """🔍 Get detailed product information. CALL THIS when customer mentions any product!
+        
+        When to use:
+        - Customer says "I want a mouse" → Call with product_id="mouse-001"
+        - Customer asks "Tell me about the keyboard" → Call with product_id="keyboard-001"
+        - Customer says "What hoodies do you have" → Call with product_id="hoodie-001"
+        
+        Args:
+            product_id: Exact product ID from the catalog
+        """
+        product = commerce.get_product_by_id(product_id)
+        
+        if not product:
+            return f"Product {product_id} not found. Check the product ID."
+        
+        result = f"{product['name']} costs ₹{product['price']}. "
+        result += f"{product['description']}. "
+        if product.get('size'):
+            result += f"Available in sizes: {', '.join(product['size'])}."
+        
+        logger.info(f"Product details: {product_id}")
         return result
     
     @function_tool
-    async def update_hp(
+    async def add_to_cart(
         self,
         context: RunContext,
-        change: Annotated[int, "HP change (positive for healing, negative for damage)"],
-        reason: Annotated[str, "Reason for HP change"]
+        product_id: Annotated[str, "REQUIRED: Product ID like 'mouse-001', 'hoodie-001', 'keyboard-001'"],
+        quantity: Annotated[int, "How many items (default 1)"] = 1,
+        size: Annotated[str | None, "For tshirts/hoodies ONLY: S, M, L, or XL"] = None
     ):
-        """Update player's HP.
+        """🛒 Add product to cart. CALL THIS when customer says yes/sure/add it/I'll take it!
+        
+        When to use:
+        - Customer says "Yes" after you describe a product → Call this immediately!
+        - Customer says "Add it to cart" → Call this!
+        - Customer says "I'll take it" → Call this!
+        - Customer says "Sure" → Call this!
+        
+        For clothing (tshirts/hoodies): Ask for size first, then call with size parameter.
+        For other items: Call immediately without size.
         
         Args:
-            change: Amount to change HP by
-            reason: Why HP changed
+            product_id: Exact product ID
+            quantity: Number of items (usually 1)
+            size: Only for tshirts/hoodies - S, M, L, or XL
         """
-        player = game_state.get("player", {})
-        old_hp = player.get("hp", 100)
-        player["hp"] = max(0, min(player.get("max_hp", 100), old_hp + change))
+        import aiohttp
         
-        save_game_state()
+        product = commerce.get_product_by_id(product_id)
+        if not product:
+            return f"Error: Product {product_id} not found. Use correct ID."
         
-        if change > 0:
-            result = f"💚 Healed {change} HP! Now at {player['hp']}/{player['max_hp']} HP. ({reason})"
-        else:
-            result = f"💔 Took {abs(change)} damage! Now at {player['hp']}/{player['max_hp']} HP. ({reason})"
-            if player["hp"] == 0:
-                result += " ⚠️ CRITICAL CONDITION!"
+        # Check if size is needed
+        if product.get('category') in ['tshirt', 'hoodie'] and not size:
+            return f"Please specify size for {product['name']}: {', '.join(product.get('size', []))}"
         
-        logger.info(f"HP updated: {old_hp} → {player['hp']} ({reason})")
+        # Add to both backend and frontend carts
+        commerce.add_to_cart(SESSION_ID, product_id, quantity, size)
+        
+        # Also add to frontend cart via API
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                    'http://localhost:3001/api/cart',
+                    json={
+                        'product_id': product_id,
+                        'quantity': quantity,
+                        'size': size
+                    }
+                ) as response:
+                    if response.status == 200:
+                        logger.info(f"Added to frontend cart: {product_id}")
+        except Exception as e:
+            logger.warning(f"Failed to sync with frontend cart: {e}")
+        
+        message = f"Great! Added {product['name']} to your cart"
+        if size:
+            message += f" in size {size}"
+        message += f". Total: ₹{product['price'] * quantity}."
+        
+        logger.info(f"Added to cart: {product_id} x{quantity}")
+        return message
+    
+    @function_tool
+    async def view_cart(self, context: RunContext):
+        """View current shopping cart contents and total.
+        
+        Returns cart summary with items and total price.
+        """
+        cart = commerce.get_cart(SESSION_ID)
+        
+        if not cart['items']:
+            return "Your cart is empty. Browse our products to start shopping!"
+        
+        result = "Your Cart:\n"
+        for item in cart['items']:
+            result += f"- {item['name']}"
+            if item.get('size'):
+                result += f" ({item['size']})"
+            result += f" x{item['quantity']} = ₹{item['item_total']}\n"
+        
+        result += f"\nTotal: ₹{cart['total']}"
+        
+        logger.info(f"Cart viewed: {len(cart['items'])} items, ₹{cart['total']}")
         return result
     
     @function_tool
-    async def update_inventory(
+    async def remove_from_cart(
         self,
         context: RunContext,
-        action: Annotated[str, "Action: 'add' or 'remove'"],
-        item: Annotated[str, "Item name"]
+        product_id: Annotated[str, "Product ID to remove"]
     ):
-        """Add or remove items from player inventory.
+        """Remove a product from the shopping cart.
         
         Args:
-            action: 'add' or 'remove'
-            item: Item name
+            product_id: Product ID to remove
         """
-        inventory = game_state.get("player", {}).get("inventory", [])
+        commerce.remove_from_cart(SESSION_ID, product_id)
         
-        if action == "add":
-            inventory.append(item)
-            result = f"📦 Added {item} to inventory!"
-            logger.info(f"Added item: {item}")
-        elif action == "remove":
-            if item in inventory:
-                inventory.remove(item)
-                result = f"📤 Removed {item} from inventory."
-                logger.info(f"Removed item: {item}")
-            else:
-                result = f"❌ {item} not in inventory."
-        else:
-            result = "Invalid action. Use 'add' or 'remove'."
-        
-        save_game_state()
-        return result
+        message = f"Removed product from cart"
+        logger.info(f"Removed from cart: {product_id}")
+        return message
     
     @function_tool
-    async def update_location(
-        self,
-        context: RunContext,
-        location_name: Annotated[str, "New location name"],
-        description: Annotated[str, "Location description"]
-    ):
-        """Update player's current location.
+    async def checkout(self, context: RunContext):
+        """💳 Complete the purchase and checkout. CALL THIS when customer wants to finalize order.
         
-        Args:
-            location_name: Name of new location
-            description: Description of the location
+        When to use:
+        - Customer says "Checkout" → Call this!
+        - Customer says "I'm ready to buy" → Call this!
+        - Customer says "Complete my order" → Call this!
+        
+        Creates an order and clears the cart.
         """
-        game_state["current_location"] = {
-            "name": location_name,
-            "description": description,
-            "available_paths": []
-        }
+        import aiohttp
         
-        save_game_state()
-        
-        logger.info(f"Location changed to: {location_name}")
-        return f"📍 Arrived at: {location_name}"
-    
-    @function_tool
-    async def record_event(
-        self,
-        context: RunContext,
-        event_description: Annotated[str, "What happened"]
-    ):
-        """Record an important event in the game history.
-        
-        Args:
-            event_description: Description of the event
-        """
-        events = game_state.get("events", [])
-        events.append({
-            "description": event_description,
-            "timestamp": datetime.now().isoformat()
-        })
-        game_state["events"] = events
-        
-        save_game_state()
-        
-        logger.info(f"Event recorded: {event_description}")
-        return f"📝 Recorded: {event_description}"
-    
-    @function_tool
-    async def update_quest(
-        self,
-        context: RunContext,
-        quest_id: Annotated[str, "Quest identifier"],
-        status: Annotated[str, "Quest status: available, active, completed, or failed"]
-    ):
-        """Update quest status.
-        
-        Args:
-            quest_id: Quest ID
-            status: New status
-        """
-        quests = game_state.get("quests", [])
-        for quest in quests:
-            if quest.get("id") == quest_id:
-                quest["status"] = status
-                save_game_state()
-                
-                if status == "completed":
-                    result = f"🎉 Quest Completed: {quest.get('title')}!"
-                elif status == "active":
-                    result = f"⚔️ Quest Active: {quest.get('title')}"
-                else:
-                    result = f"📜 Quest {status}: {quest.get('title')}"
-                
-                logger.info(f"Quest updated: {quest_id} → {status}")
-                return result
-        
-        return f"Quest {quest_id} not found."
+        try:
+            # Create order in backend
+            order = commerce.create_order(SESSION_ID, buyer_name="Voice Customer")
+            
+            # Also trigger frontend checkout
+            try:
+                async with aiohttp.ClientSession() as session:
+                    async with session.post('http://localhost:3001/api/checkout') as response:
+                        if response.status == 200:
+                            logger.info("Frontend checkout triggered")
+            except Exception as e:
+                logger.warning(f"Failed to trigger frontend checkout: {e}")
+            
+            result = f"Order confirmed! Order ID: {order['id']}. "
+            result += f"Total: ₹{order['total']}. "
+            result += f"You ordered {len(order['line_items'])} items. "
+            result += "Thank you for shopping with us!"
+            
+            logger.info(f"Order completed: {order['id']}")
+            return result
+        except ValueError as e:
+            return str(e)
 
 
 def prewarm(proc: JobProcess):
@@ -323,9 +292,9 @@ def prewarm(proc: JobProcess):
 
 
 async def entrypoint(ctx: JobContext):
-    """Main entrypoint for the Game Master agent"""
+    """Main entrypoint for the Shop Agent"""
     
-    logger.info(f"Starting Game Master session for room: {ctx.room.name}")
+    logger.info(f"Starting Shop Agent session for room: {ctx.room.name}")
     
     # Create session with Murf TTS
     session = AgentSession(
@@ -334,14 +303,14 @@ async def entrypoint(ctx: JobContext):
             language="en-US",
         ),
         llm=google.LLM(
-            model="gemini-2.5-flash",
-            temperature=0.8,  # Higher for creative storytelling
+            model="gemini-2.0-flash-001",  # Stable model with good tool calling
+            temperature=0.6,  # Balanced for natural conversation
         ),
         tts=murf_tts.TTS(
             voice="en-US-ryan",
-            style="Narration",  # Dramatic narration style
+            style="Conversational",  # Warm and natural
             tokenizer=tokenize.basic.SentenceTokenizer(
-                min_sentence_len=30,  # Longer for storytelling
+                min_sentence_len=20,  # Shorter for quick responses
             ),
         ),
         turn_detection=MultilingualModel(),
@@ -362,11 +331,11 @@ async def entrypoint(ctx: JobContext):
 
     ctx.add_shutdown_callback(log_usage)
 
-    # Start the session with Game Master
-    gm = GameMasterAgent()
+    # Start the session with Shop Agent
+    shop_agent = ShopAgent()
     
     await session.start(
-        agent=gm,
+        agent=shop_agent,
         room=ctx.room,
         room_input_options=RoomInputOptions(
             noise_cancellation=noise_cancellation.BVC(),
