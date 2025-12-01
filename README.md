@@ -1,179 +1,207 @@
-# Day 10: Voice Improv Battle 🎭
 
-A voice-first improv game show where you perform hilarious scenarios and get real-time reactions from an AI host!
+---
 
-## 🌟 Features
+# 🎭 𝐀𝐈 𝐕𝐨𝐢𝐜𝐞 𝐀𝐠𝐞𝐧𝐭 𝐂𝐡𝐚𝐥𝐥𝐞𝐧𝐠𝐞 | 𝐃𝐚𝐲 𝟏𝟎: 𝐕𝐨𝐢𝐜𝐞 𝐈𝐦𝐩𝐫𝐨𝐯e 𝐁𝐚𝐭𝐭𝐥𝐞 
 
-### Voice Improv Game Show
-- **Energetic AI Host**: Meet your witty, high-energy game show host who guides you through improv scenarios
-- **Unique Scenarios**: 8 hilarious improv situations to perform (time travelers, escaped food, cursed objects, and more!)
-- **Real-time Reactions**: Get honest, varied feedback - sometimes supportive, sometimes critical, always entertaining
-- **3-Round Structure**: Complete game with intro, 3 performance rounds, and closing summary
-- **Live Transcript**: View the full conversation in real-time with a beautiful sliding transcript panel
-- **Message History**: See everything you said and what the agent responded with timestamps
+A **voice-first improv comedy game show** where you perform hilarious scenarios and get **real-time reactions** from an energetic AI host!
 
-### Game Flow
-1. **Welcome**: Enter your stage name and join the show
-2. **Introduction**: Host explains the rules and sets the energy
-3. **Round 1-3**: 
-   - Host presents a scenario
-   - You improvise in character
-   - Say "end scene" when done
-   - Host reacts with honest feedback
-4. **Closing**: Host summarizes your improv style and memorable moments
+---
 
-### Host Personality
-- High-energy and entertaining
-- Witty with great comedic timing
-- Varied reactions (not always supportive!)
-- Sometimes amused, sometimes unimpressed, sometimes pleasantly surprised
-- Light teasing but always respectful
+## 🌟 Highlights
+
+### 🎙️ Voice Improv Game Show
+
+* **High-energy AI Host**: A witty, expressive, and dramatic game show host to guide you
+* **8 Hilarious Scenarios**: From time-travel mishaps to cursed objects and yoga-doing dinosaurs
+* **Real-Time Reactions**: Host gives honest, surprising, sometimes savage feedback
+* **3-Round Gameplay**: Intro → 3 improv rounds → final summary
+* **Live Transcript Panel**: Sliding UI panel showing the full conversation
+* **Message History with Timestamps**: Every line stored for review
+
+---
+
+## 🎮 Game Flow
+
+1. **Welcome** — Enter your stage name
+2. **Introduction** — Host sets the mood and explains the rules
+3. **Round 1–3**
+
+   * Host gives a scenario
+   * You perform in character
+   * Say **“end scene”** to finish
+   * Host reacts + gives feedback
+4. **Final Summary** — Host reviews your highlights & improv style
+
+### 🧠 Host Personality
+
+* Energetic, comedic, sarcastic
+* Mix of supportive + critical reactions
+* Occasionally unimpressed for humor
+* Light teasing but always respectful
+* Great comedic timing
+
+---
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: Next.js 15, React, TypeScript, Framer Motion
-- **Backend**: Python, LiveKit Agents SDK
-- **Voice**: Deepgram STT, Google Gemini 2.0 Flash, **Murf Falcon TTS**
-- **Real-time**: LiveKit WebRTC
+* **Frontend**: Next.js 15, React, TypeScript, Framer Motion
+* **Backend**: Python, LiveKit Agents SDK
+* **Voice**: Deepgram STT, Google Gemini 2.0 Flash, **Murf Falcon TTS**
+* **Real-time**: LiveKit WebRTC
 
-## 🎭 Sample Scenarios
+---
 
-1. "You are a time-travelling tour guide explaining modern smartphones to someone from the 1800s."
-2. "You are a restaurant waiter who must calmly tell a customer that their order has escaped the kitchen."
-3. "You are a customer trying to return an obviously cursed object to a very skeptical shop owner."
-4. "You are a barista who has to tell a customer that their latte is actually a portal to another dimension."
-5. "You are a tech support agent helping an alien understand how to use a toaster."
-6. "You are a museum guide explaining why the dinosaur exhibit is currently doing yoga."
-7. "You are a pizza delivery person who accidentally delivered to the wrong century."
-8. "You are a librarian explaining to a dragon why they can't check out books without a library card."
+## 🎭 Sample Improv Scenarios
+
+1. A time-travel tour guide explaining smartphones to someone from 1800s
+2. A waiter calmly informing a customer their food has *escaped*
+3. A customer returning a cursed item to a skeptical shop owner
+4. A barista revealing that the latte is actually a portal
+5. A tech support agent helping an alien operate a toaster
+6. A museum guide explaining why the dinosaur exhibit is doing yoga
+7. A pizza delivery person who delivered to the wrong century
+8. A librarian explaining to a dragon why they need a library card
+
+---
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.10+
-- Node.js 18+
-- pnpm
-- LiveKit Cloud account (or local server)
-- API Keys: Deepgram, Google AI, Murf
 
-### Setup
+* Python 3.10+
+* Node.js 18+
+* pnpm
+* LiveKit Cloud account (or local server)
+* API Keys (Deepgram, Google AI, Murf)
 
-1. **Clone the repository**
+---
+
+## 💻 Installation
+
+### 1️⃣ Clone Repository
+
 ```bash
-git clone https://github.com/GhanshyamJha05/Tenth_Task_murf_ai.git
-cd Tenth_Task_murf_ai
+git clone https://github.com/vikasyadav097/AI-Voice-Agent-Day-10-Voice-Improve-Battle- 
 ```
 
-2. **Backend Setup**
+### 2️⃣ Backend Setup
+
 ```bash
 cd backend
 python -m venv .venv
-.venv\Scripts\activate  # Windows
-source .venv/bin/activate  # Mac/Linux
+.venv\Scripts\activate        # Windows
+source .venv/bin/activate     # Mac/Linux
 pip install -r requirements.txt
 cp .env.example .env.local
-# Add your API keys to .env.local
+# Add API keys to .env.local
 ```
 
-3. **Frontend Setup**
+### 3️⃣ Frontend Setup
+
 ```bash
 cd frontend
 pnpm install
 cp .env.example .env.local
-# Add your LiveKit credentials to .env.local
+# Add LiveKit credentials
 ```
 
-4. **Start LiveKit Server** (in project root)
+### 4️⃣ Start LiveKit Server
+
 ```bash
-.\livekit-server.exe --dev  # Windows
-./livekit-server --dev      # Mac/Linux
+.\livekit-server.exe --dev    # Windows
+./livekit-server --dev        # Mac/Linux
 ```
 
-5. **Start Backend Agent**
+### 5️⃣ Run Backend Agent
+
 ```bash
 cd backend
 .venv\Scripts\python.exe src/agent.py dev
 ```
 
-6. **Start Frontend**
+### 6️⃣ Run Frontend
+
 ```bash
 cd frontend
 pnpm dev
 ```
 
-7. **Open Browser**
-Navigate to `http://localhost:3000`
+### 7️⃣ Open Browser
+
+👉 Visit: **[http://localhost:3000](http://localhost:3000)**
+
+---
 
 ## 🎮 How to Play
 
-1. **Enter Your Name**: Type your stage name on the welcome screen
-2. **Click "START IMPROV BATTLE!"**: Connect to the voice agent
-3. **Listen to the Host**: They'll introduce the game and explain the rules
-4. **Get Your Scenario**: Host will present your first improv scenario
-5. **Perform**: Act out the scenario in character!
-6. **End Scene**: Say "end scene" or "done" when you finish
-7. **Get Feedback**: Host will react to your performance
-8. **View Transcript**: Click the "Transcript" button (top-right) to see the full conversation
-9. **Repeat**: Complete 3 rounds total
-10. **Closing**: Host summarizes your improv style
+1. Enter your **stage name**
+2. Press **START IMPROV BATTLE!**
+3. Listen to the AI host
+4. Perform the scenario in character
+5. Say **“end scene”** when done
+6. Hear the host’s reaction
+7. Open the **Transcript Panel** to see the full chat
+8. Complete all 3 rounds
+9. Hear your final performance summary
 
-## 💬 Tips for Great Improv
+---
 
-- **Commit to the character**: Fully embrace the role
-- **Add details**: Specific details make it funnier
-- **React emotionally**: Show feelings appropriate to the situation
-- **Keep it moving**: Don't overthink, just go with it
-- **Have fun**: The host appreciates creativity and boldness!
+## 💡 Tips for Better Improv
 
-## 📝 Conversation Transcript Feature
+* Commit to the character
+* Add fun, weird, or unexpected details
+* Show emotions
+* Don’t overthink — flow with it
+* Have fun — bold choices impress the host!
 
-The app includes a real-time conversation transcript that captures everything said during your improv session:
+---
 
-### Features:
-- **Live Updates**: Messages appear as they're spoken
-- **Speaker Labels**: Clear distinction between 🎭 HOST and 🎤 YOU
-- **Timestamps**: Each message shows when it was said
-- **Sliding Panel**: Beautiful animation from the right side
-- **Auto-scroll**: Automatically scrolls to latest message
-- **Session Storage**: Transcript persists during your session
+## 📝 Real-Time Transcript System
 
-### How to Use:
-1. Click the **"Transcript"** button in the top-right corner
-2. View the full conversation history
-3. The badge shows the number of messages
-4. Click the X or button again to close the panel
+### 📌 Features
 
-### UI Design:
-- Agent messages: Purple bubbles on the left
-- User messages: Pink bubbles on the right
-- Dark theme matching the stage aesthetic
-- Smooth animations and transitions
+* Auto-updating message list
+* Speaker labels (🎭 HOST / 🎤 YOU)
+* Timestamps on every message
+* Slide-in panel from the right
+* Auto-scroll to latest line
+* Stored in session memory
+
+### 🎨 UI Style
+
+* Purple host bubbles (left)
+* Pink user bubbles (right)
+* Dark stage-style theme
+* Smooth framer motion animations
+
+---
 
 ## 📁 Project Structure
 
 ```
 ├── backend/
 │   ├── src/
-│   │   ├── agent.py          # Improv host agent with game logic
-│   │   └── murf_tts.py       # Murf TTS integration
-│   └── .env.local            # Backend config
+│   │   ├── agent.py               # Game host logic + scenarios
+│   │   └── murf_tts.py            # Murf Falcon integration
+│   └── .env.local
 ├── frontend/
 │   ├── app/
-│   │   ├── page.tsx          # Main improv game page
+│   │   ├── page.tsx               # Main improv game
 │   │   └── api/
-│   │       └── connection-details/
-│   │           └── route.ts  # LiveKit connection API
-│   ├── components/
-│   │   └── app/
-│   │       ├── improv-welcome.tsx    # Welcome screen
-│   │       └── improv-session.tsx    # Game session with transcript
-│   └── .env.local            # Frontend config
-└── livekit-server.exe        # LiveKit server
+│   │       └── connection-details/route.ts
+│   ├── components/app/
+│   │   ├── improv-welcome.tsx     # Welcome screen
+│   │   └── improv-session.tsx     # Game session + transcript
+│   └── .env.local
+└── livekit-server.exe
 ```
 
-## 🔧 Configuration
+---
 
-### Backend (.env.local)
+## 🔧 Environment Variables
+
+### Backend
+
 ```env
 LIVEKIT_URL=ws://localhost:7880
 LIVEKIT_API_KEY=your_key
@@ -183,65 +211,89 @@ GOOGLE_API_KEY=your_key
 MURF_API_KEY=your_key
 ```
 
-### Frontend (.env.local)
+### Frontend
+
 ```env
 NEXT_PUBLIC_LIVEKIT_URL=ws://localhost:7880
 LIVEKIT_API_KEY=your_key
 LIVEKIT_API_SECRET=your_secret
 ```
 
-## 🎯 Key Features Implemented
+---
 
-✅ Single-player improv game show  
-✅ AI host with varied personality  
-✅ 8 unique improv scenarios  
-✅ 3-round game structure  
-✅ Real-time voice interaction  
-✅ Honest, varied feedback (supportive, critical, amused)  
-✅ Game state management  
-✅ Beautiful stage-themed UI  
-✅ Smooth animations and effects  
-✅ Murf Falcon TTS for ultra-fast responses  
-✅ **Live conversation transcript with sliding panel**  
-✅ **Real-time message capture (agent + user)**  
-✅ **Timestamped conversation history**  
-✅ **Beautiful chat UI with speaker labels**  
+## 🎯 Core Features Implemented
 
-## 🐛 Troubleshooting
-
-### Agent not responding
-- Check backend logs for errors
-- Verify all API keys are set
-- Ensure LiveKit server is running
-
-### Can't connect
-- Make sure all three servers are running (LiveKit, Backend, Frontend)
-- Check that ports 7880 and 3000 are available
-- Verify .env.local files are configured
-
-### Host doesn't react
-- Make sure to say "end scene" or "done" to signal you're finished
-- Check that your microphone is working
-- Look at backend logs for any errors
-
-## 📝 License
-
-MIT License - See LICENSE file for details
-
-## 👨‍💻 Author
-
-Ghanshyam Jha
-- GitHub: [@GhanshyamJha05](https://github.com/GhanshyamJha05)
-
-## 🙏 Acknowledgments
-
-- LiveKit for the amazing real-time infrastructure
-- Murf AI for ultra-fast Falcon TTS
-- Google Gemini for intelligent, creative conversations
-- Deepgram for accurate speech recognition
+✔️ Single-player improv game show
+✔️ AI host with personality + humor
+✔️ 8 creative scenarios
+✔️ 3 structured rounds
+✔️ Real-time voice agent
+✔️ Honest, varied reactions
+✔️ Session transcript with timestamps
+✔️ Murf Falcon TTS integration
+✔️ Smooth, stage-themed UI
+✔️ Fully animated transcript panel
+✔️ Clean game state management
 
 ---
 
-**Built for the 10 Days of Voice Agents Challenge - Day 10** 🎭🎉
+## 🐛 Troubleshooting
 
-**Powered by Murf Falcon TTS - The Fastest Voice AI!** ⚡
+### 🤖 Host Not Responding?
+
+* Check backend logs
+* Ensure API keys are correct
+* Verify LiveKit server is running
+
+### 🔗 Connection Issues?
+
+* All 3 servers must run (LiveKit, Backend, Frontend)
+* Ports **3000** and **7880** must be free
+* Check `.env.local` configs
+
+### 🎤 Host Won’t React?
+
+* Always say **“end scene”** or **“done”**
+* Check microphone settings
+* Check backend console
+
+---
+
+## 📜 License
+
+MIT — see `LICENSE`.
+
+---
+
+
+
+---
+
+## 🙏 Acknowledgments
+
+* LiveKit — real-time infrastructure
+* Murf Falcon — ultra-fast TTS
+* Google Gemini — creative reasoning
+* Deepgram — accurate STT
+
+---
+
+# 🎭 Built for Day 10 of the 10 Days of Voice Agents Challenge
+
+**Powered by Murf Falcon TTS ⚡**
+
+---
+
+| Day      | Status         |
+| -------- | -------------- |
+| Day 1    | ✅ Completed    |
+| Day 2    | ✅ Completed    |
+| Day 3    | ✅ Completed    |
+| Day 4    | ✅ Completed    |
+| Day 5    | ✅ Completed    |
+| Day 6    | ✅ Completed    |
+| Day 7    | ✅ Completed    |
+| Day 8    | ✅ Completed    |
+| Day 9    | ✅ Completed    |
+| Day 10   | ✅ Completed    |
+
